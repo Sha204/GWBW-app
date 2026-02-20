@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gharwork Big Work | GWBW</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi:ital@0;1&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary:#E8572A; --primary-light:#FF7B50; --accent:#FFD166;
+    --dark:#1A1A2E; --soft:#FFF8F5; --text:#2d2d2d; --muted:#888;
+    --radius:18px; --shadow:0 8px 32px rgba(232,87,42,0.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Poppins',sans-serif;background:var(--soft);color:var(--text);min-height:100vh;}
+
+  /* HEADER */
+  header{background:var(--dark);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:8px;}
+  .logo{font-family:'Tiro Devanagari Marathi',serif;font-size:1.05rem;color:var(--accent);flex-shrink:0;}
+  .logo span{color:var(--primary-light);}
+  .logo small{font-size:0.58rem;color:rgba(255,255,255,0.35);font-family:'Poppins',sans-serif;font-weight:600;letter-spacing:2px;}
+  .header-right{display:flex;align-items:center;gap:8px;}
+  .lang-selector{display:flex;gap:3px;background:rgba(255,255,255,0.08);border-radius:50px;padding:3px;}
+  .lang-btn{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.5);font-size:0.66rem;font-weight:700;font-family:'Poppins',sans-serif;padding:4px 9px;border-radius:50px;transition:all 0.2s;}
+  .lang-btn.active{background:var(--primary);color:#fff;}
+  .header-icons button{background:none;border:none;cursor:pointer;color:#fff;font-size:1.1rem;}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,var(--dark) 60%,#2d1b4e 100%);padding:24px 20px 36px;position:relative;overflow:hidden;}
+  .hero::after{content:'';position:absolute;right:-40px;bottom:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(232,87,42,0.25) 0%,transparent 70%);}
+  .hero-tag{display:inline-block;background:rgba(255,209,102,0.15);color:var(--accent);font-size:0.66rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:3px 11px;border-radius:50px;margin-bottom:8px;}
+  .hero h1{font-family:'Tiro Devanagari Marathi',serif;font-size:1.75rem;color:#fff;line-height:1.3;margin-bottom:6px;}
+  .hero p{color:rgba(255,255,255,0.65);font-size:0.82rem;margin-bottom:14px;}
+
+  /* LOCATION BAR */
+  .location-bar{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:9px 13px;margin-bottom:12px;cursor:pointer;transition:background 0.2s;}
+  .location-bar:hover{background:rgba(255,255,255,0.18);}
+  .loc-icon{font-size:1rem;flex-shrink:0;}
+  .loc-text{flex:1;min-width:0;}
+  .loc-label{font-size:0.6rem;color:rgba(255,255,255,0.5);font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+  .loc-value{font-size:0.82rem;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .loc-change{font-size:0.65rem;color:var(--accent);font-weight:700;flex-shrink:0;background:rgba(255,209,102,0.15);padding:4px 9px;border-radius:50px;border:none;cursor:pointer;font-family:'Poppins',sans-serif;}
+
+  /* SEARCH BAR */
+  .search-bar{display:flex;align-items:center;background:#fff;border-radius:50px;padding:9px 15px;gap:9px;box-shadow:0 4px 20px rgba(0,0,0,0.2);}
+  .search-bar input{flex:1;border:none;outline:none;font-size:0.84rem;font-family:'Poppins',sans-serif;color:var(--text);background:transparent;}
+  .search-bar input::placeholder{color:var(--muted);}
+  .search-btn{background:var(--primary);color:#fff;border:none;border-radius:50px;padding:7px 14px;font-size:0.76rem;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;}
+
+  /* LOCATION MODAL */
+  .loc-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:300;align-items:flex-end;justify-content:center;}
+  .loc-modal-overlay.open{display:flex;}
+  .loc-modal{background:#fff;border-radius:26px 26px 0 0;padding:22px 20px 36px;width:100%;max-width:480px;animation:slideUp 0.3s ease;}
+  .loc-modal-handle{width:36px;height:4px;background:#e0e0e0;border-radius:50px;margin:0 auto 16px;}
+  .loc-modal h3{font-size:1.05rem;font-weight:700;color:var(--dark);margin-bottom:16px;}
+  .detect-btn{width:100%;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border:none;border-radius:13px;padding:13px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;}
+  .or-divider{text-align:center;color:var(--muted);font-size:0.75rem;margin:12px 0;position:relative;}
+  .or-divider::before,.or-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:#eee;}
+  .or-divider::before{left:0;} .or-divider::after{right:0;}
+  .manual-input{display:flex;gap:8px;}
+  .manual-input input{flex:1;border:1.5px solid #e8e8e8;border-radius:11px;padding:10px 13px;font-size:0.86rem;font-family:'Poppins',sans-serif;outline:none;transition:border 0.2s;background:#fafafa;}
+  .manual-input input:focus{border-color:var(--primary);}
+  .manual-input button{background:var(--dark);color:#fff;border:none;border-radius:11px;padding:10px 15px;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;}
+  .recent-locations{margin-top:16px;}
+  .recent-title{font-size:0.72rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+  .recent-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f5f5f5;cursor:pointer;}
+  .recent-item:last-child{border-bottom:none;}
+  .recent-item:hover .recent-name{color:var(--primary);}
+  .recent-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;}
+  .recent-name{font-size:0.84rem;font-weight:500;color:var(--text);}
+  .recent-sub{font-size:0.7rem;color:var(--muted);}
+  .loc-close{position:absolute;top:14px;right:18px;background:#f0f0f0;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;}
+  .loc-modal{position:relative;}
+
+  /* SECTIONS */
+  section{padding:20px 18px;}
+  .section-title{font-size:0.96rem;font-weight:700;color:var(--dark);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+  .section-title a{color:var(--primary);font-size:0.74rem;font-weight:500;text-decoration:none;}
+
+  /* CATEGORIES */
+  .categories{display:flex;gap:9px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+  .categories::-webkit-scrollbar{display:none;}
+  .chip{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;min-width:63px;}
+  .chip-icon{width:50px;height:50px;border-radius:13px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:var(--shadow);transition:transform 0.2s;border:2px solid transparent;}
+  .chip.active .chip-icon{border-color:var(--primary);background:#fff5f2;}
+  .chip:hover .chip-icon{transform:translateY(-3px);}
+  .chip span{font-size:0.64rem;color:var(--text);text-align:center;font-weight:500;}
+
+  /* MAID CARDS */
+  .maids-grid{display:flex;flex-direction:column;gap:12px;}
+  .maid-card{background:#fff;border-radius:var(--radius);padding:14px;display:flex;gap:12px;box-shadow:var(--shadow);cursor:pointer;transition:transform 0.2s;animation:fadeUp 0.5s ease both;position:relative;overflow:hidden;}
+  .maid-card:hover{transform:translateY(-3px);}
+  .maid-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent));}
+  .maid-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;background:linear-gradient(135deg,#ffd6c8,#ffb399);}
+  .maid-info{flex:1;min-width:0;}
+  .maid-name{font-weight:700;font-size:0.9rem;color:var(--dark);}
+  .maid-work{font-size:0.71rem;color:var(--muted);margin:2px 0 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .maid-dist{font-size:0.68rem;color:var(--primary);font-weight:600;margin-bottom:4px;}
+  .maid-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px;}
+  .tag{background:#fff5f2;color:var(--primary);font-size:0.62rem;font-weight:600;padding:2px 7px;border-radius:50px;border:1px solid #ffd0c0;}
+  .maid-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .rating{color:#f5a623;font-size:0.74rem;font-weight:600;}
+  .price{color:var(--primary);font-size:0.76rem;font-weight:700;}
+  .avail{font-size:0.66rem;color:#22c55e;font-weight:600;background:#f0fdf4;padding:2px 7px;border-radius:50px;}
+  .book-btn{background:var(--primary);color:#fff;border:none;border-radius:50px;padding:7px 12px;font-size:0.72rem;font-weight:600;cursor:pointer;align-self:center;flex-shrink:0;font-family:'Poppins',sans-serif;transition:background 0.2s;}
+  .book-btn:hover{background:var(--primary-light);}
+
+  /* PROMO */
+  .promo-banner{background:linear-gradient(135deg,#1A1A2E,#2d1b4e);border-radius:var(--radius);padding:15px 17px;display:flex;align-items:center;justify-content:space-between;margin:0 18px;box-shadow:var(--shadow);}
+  .promo-text{color:#fff;}
+  .promo-text h3{font-size:0.88rem;font-weight:700;margin-bottom:2px;}
+  .promo-text p{font-size:0.68rem;color:rgba(255,255,255,0.65);}
+  .promo-badge{background:var(--accent);color:var(--dark);font-weight:800;font-size:1rem;padding:8px 14px;border-radius:11px;}
+
+  /* MAID REG BANNER */
+  .maid-reg-banner{margin:0 18px 26px;background:linear-gradient(135deg,#E8572A,#FF7B50);border-radius:17px;padding:17px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 32px rgba(232,87,42,0.25);gap:10px;}
+  .maid-reg-banner .mlabel{font-size:0.62rem;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.75);text-transform:uppercase;margin-bottom:2px;}
+  .maid-reg-banner h3{font-size:0.88rem;font-weight:700;color:#fff;margin-bottom:2px;}
+  .maid-reg-banner p{font-size:0.68rem;color:rgba(255,255,255,0.8);}
+  .reg-now-btn{background:#fff;color:#E8572A;border:none;border-radius:50px;padding:8px 14px;font-size:0.76rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;flex-shrink:0;}
+
+  /* BOOKING MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;align-items:flex-end;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:#fff;border-radius:25px 25px 0 0;padding:22px 19px 34px;width:100%;max-width:480px;animation:slideUp 0.35s cubic-bezier(.4,0,.2,1);position:relative;}
+  @keyframes slideUp{from{transform:translateY(100%);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .modal-handle{width:36px;height:4px;background:#e0e0e0;border-radius:50px;margin:0 auto 15px;}
+  .modal h2{font-size:1rem;font-weight:700;color:var(--dark);margin-bottom:15px;}
+  .close-modal{position:absolute;top:12px;right:15px;background:#f0f0f0;border:none;border-radius:50%;width:27px;height:27px;cursor:pointer;font-size:0.82rem;display:flex;align-items:center;justify-content:center;}
+  .form-group{margin-bottom:12px;}
+  .form-group label{font-size:0.74rem;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;}
+  .form-group input,.form-group select,.form-group textarea{width:100%;border:1.5px solid #e8e8e8;border-radius:11px;padding:10px 12px;font-size:0.84rem;font-family:'Poppins',sans-serif;outline:none;transition:border 0.2s;background:#fafafa;color:var(--text);}
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary);background:#fff;}
+  .form-group textarea{resize:none;height:68px;}
+  .time-slots{display:flex;gap:6px;flex-wrap:wrap;}
+  .slot{padding:6px 11px;border-radius:50px;border:1.5px solid #e8e8e8;font-size:0.72rem;cursor:pointer;transition:all 0.2s;background:#fafafa;font-family:'Poppins',sans-serif;}
+  .slot.selected{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .confirm-btn{width:100%;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border:none;border-radius:12px;padding:13px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:14px;font-family:'Poppins',sans-serif;}
+
+  /* REGISTRATION PAGE */
+  #maidPage{display:none;padding-bottom:88px;}
+  .reg-hero{background:linear-gradient(135deg,#1a1a2e,#2d1b4e);padding:24px 20px 28px;text-align:center;}
+  .reg-hero h2{color:var(--accent);font-size:1.2rem;font-weight:700;margin-bottom:4px;}
+  .reg-hero p{color:rgba(255,255,255,0.65);font-size:0.78rem;}
+  .benefits-strip{display:flex;gap:9px;padding:0 18px 12px;overflow-x:auto;scrollbar-width:none;}
+  .benefit-card{background:#fff;border-radius:12px;padding:11px 13px;min-width:110px;text-align:center;box-shadow:var(--shadow);flex-shrink:0;}
+  .benefit-card .b-icon{font-size:1.35rem;margin-bottom:4px;}
+  .benefit-card p{font-size:0.66rem;color:var(--text);font-weight:600;}
+  .reg-form{padding:14px 18px;}
+  .reg-section-title{font-size:0.71rem;font-weight:700;color:var(--primary);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 9px;display:flex;align-items:center;gap:8px;}
+  .reg-section-title::after{content:'';flex:1;height:1px;background:#f0e8e4;}
+  .checkbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+  .checkbox-item{display:flex;align-items:center;gap:7px;background:#fff;border:1.5px solid #e8e8e8;border-radius:9px;padding:8px 10px;cursor:pointer;transition:all 0.2s;font-size:0.76rem;}
+  .checkbox-item input[type=checkbox]{accent-color:var(--primary);width:13px;height:13px;}
+  .checkbox-item.checked{border-color:var(--primary);background:#fff5f2;color:var(--primary);font-weight:600;}
+  .time-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+  .time-chip{padding:9px 10px;border-radius:9px;border:1.5px solid #e8e8e8;font-size:0.74rem;cursor:pointer;text-align:center;background:#fafafa;transition:all 0.2s;font-family:'Poppins',sans-serif;}
+  .time-chip.selected{background:var(--primary);color:#fff;border-color:var(--primary);font-weight:600;}
+  .upload-box{border:2px dashed #e0d0cc;border-radius:12px;padding:18px;text-align:center;cursor:pointer;background:#fafafa;transition:border 0.2s;}
+  .upload-box:hover{border-color:var(--primary);}
+  .upload-box .upload-icon{font-size:1.6rem;margin-bottom:5px;}
+  .upload-box p{font-size:0.74rem;color:var(--muted);}
+  .upload-box span{color:var(--primary);font-weight:600;font-size:0.76rem;}
+  .submit-reg-btn{width:100%;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border:none;border-radius:12px;padding:13px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:18px;font-family:'Poppins',sans-serif;}
+
+  /* TOAST */
+  .success-toast{display:none;position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:11px 19px;border-radius:50px;font-size:0.78rem;font-weight:600;z-index:400;box-shadow:0 8px 30px rgba(0,0,0,0.25);white-space:nowrap;}
+  .success-toast.show{display:block;animation:fadeUp 0.4s ease;}
+
+  /* BOTTOM NAV */
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:8px 0 14px;box-shadow:0 -4px 20px rgba(0,0,0,0.07);z-index:100;}
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:0.56rem;color:var(--muted);font-weight:500;}
+  .nav-item.active{color:var(--primary);}
+  .nav-item .nav-icon{font-size:1.1rem;}
+  .pb-nav{padding-bottom:85px;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  .maid-card:nth-child(1){animation-delay:0.05s;}
+  .maid-card:nth-child(2){animation-delay:0.12s;}
+  .maid-card:nth-child(3){animation-delay:0.19s;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">Gharwork <span>Big Work</span> <small>| GWBW</small></div>
+  <div class="header-right">
+    <div class="lang-selector">
+      <button class="lang-btn active" onclick="setLang('mr',this)">मर</button>
+      <button class="lang-btn" onclick="setLang('hi',this)">हि</button>
+      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+    </div>
+    <div class="header-icons">
+      <button>🔔</button>
+      <button>👤</button>
+    </div>
+  </div>
+</header>
+
+<!-- HOME PAGE -->
+<div id="homePage">
+  <div class="hero">
+    <div class="hero-tag" id="t-tag">✨ विश्वासार्ह सेवा</div>
+    <h1 id="t-hero-h1">घरकाम,<br>आमचं काम!</h1>
+    <p id="t-hero-p">तुमच्या वेळेनुसार maid बुक करा — सोप्या पद्धतीने</p>
+
+    <!-- LOCATION BAR -->
+    <div class="location-bar" onclick="openLocModal()">
+      <span class="loc-icon">📍</span>
+      <div class="loc-text">
+        <div class="loc-label" id="t-loc-label">तुमचं ठिकाण</div>
+        <div class="loc-value" id="currentLocation">ठिकाण शोधत आहे...</div>
+      </div>
+      <button class="loc-change" id="t-loc-change">बदला</button>
+    </div>
+
+    <!-- SEARCH BAR -->
+    <div class="search-bar">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Maid शोधा किंवा काम निवडा...">
+      <button class="search-btn" id="t-search-btn">शोधा</button>
+    </div>
+  </div>
+
+  <div class="pb-nav">
+    <div style="height:14px"></div>
+    <div class="promo-banner">
+      <div class="promo-text">
+        <h3 id="t-promo-h">पहिली बुकिंग FREE! 🎉</h3>
+        <p id="t-promo-p">आजच नोंदणी करा आणि सूट मिळवा</p>
+      </div>
+      <div class="promo-badge">₹0</div>
+    </div>
+
+    <section>
+      <div class="section-title"><span id="t-cat-title">काम निवडा</span></div>
+      <div class="categories">
+        <div class="chip active" onclick="selectChip(this)"><div class="chip-icon">🧹</div><span class="c-clean">साफसफाई</span></div>
+        <div class="chip" onclick="selectChip(this)"><div class="chip-icon">🍳</div><span class="c-cook">स्वयंपाक</span></div>
+        <div class="chip" onclick="selectChip(this)"><div class="chip-icon">👶</div><span class="c-baby">बाळ सांभाळ</span></div>
+        <div class="chip" onclick="selectChip(this)"><div class="chip-icon">👕</div><span class="c-laundry">कपडे</span></div>
+        <div class="chip" onclick="selectChip(this)"><div class="chip-icon">🪣</div><span class="c-dishes">भांडी</span></div>
+        <div class="chip" onclick="selectChip(this)"><div class="chip-icon">🌿</div><span class="c-garden">बागकाम</span></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <span id="t-nearby">जवळच्या Maids</span>
+        <a href="#" id="t-viewall">सगळ्या पाहा →</a>
+      </div>
+      <div class="maids-grid">
+        <div class="maid-card">
+          <div class="maid-avatar">👩</div>
+          <div class="maid-info">
+            <div class="maid-name">सुनिता पाटील</div>
+            <div class="maid-work c-clean-dishes-laundry">साफसफाई • भांडी • कपडे</div>
+            <div class="maid-dist">📍 <span class="dist-val">0.8 km</span> <span id="t-away">दूर</span></div>
+            <div class="maid-tags"><span class="tag exp5">5 वर्षे अनुभव</span><span class="tag">Verified ✓</span></div>
+            <div class="maid-meta"><span class="rating">⭐ 4.9</span><span class="price">₹150/<span class="t-hr">तास</span></span><span class="avail t-avail">उपलब्ध</span></div>
+          </div>
+          <button class="book-btn t-book" onclick="openBooking('सुनिता पाटील')">बुक करा</button>
+        </div>
+        <div class="maid-card">
+          <div class="maid-avatar">👩‍🦱</div>
+          <div class="maid-info">
+            <div class="maid-name">रेखा शिंदे</div>
+            <div class="maid-work c-cook-baby">स्वयंपाक • बाळ सांभाळ</div>
+            <div class="maid-dist">📍 <span class="dist-val">1.2 km</span> <span class="t-away-2">दूर</span></div>
+            <div class="maid-tags"><span class="tag exp8">8 वर्षे अनुभव</span><span class="tag">Verified ✓</span></div>
+            <div class="maid-meta"><span class="rating">⭐ 4.8</span><span class="price">₹180/<span class="t-hr">तास</span></span><span class="avail t-avail">उपलब्ध</span></div>
+          </div>
+          <button class="book-btn t-book" onclick="openBooking('रेखा शिंदे')">बुक करा</button>
+        </div>
+        <div class="maid-card">
+          <div class="maid-avatar">👩‍🦳</div>
+          <div class="maid-info">
+            <div class="maid-name">मंगला जाधव</div>
+            <div class="maid-work c-clean-dishes-garden">साफसफाई • भांडी • बागकाम</div>
+            <div class="maid-dist">📍 <span class="dist-val">2.1 km</span> <span class="t-away-3">दूर</span></div>
+            <div class="maid-tags"><span class="tag exp3">3 वर्षे अनुभव</span><span class="tag">Verified ✓</span></div>
+            <div class="maid-meta"><span class="rating">⭐ 4.7</span><span class="price">₹120/<span class="t-hr">तास</span></span><span class="avail t-avail">उपलब्ध</span></div>
+          </div>
+          <button class="book-btn t-book" onclick="openBooking('मंगला जाधव')">बुक करा</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="maid-reg-banner">
+      <div>
+        <div class="mlabel" id="t-reg-label">तुम्ही maid आहात?</div>
+        <h3 id="t-reg-h">GWBW सोबत काम करा!</h3>
+        <p id="t-reg-p">चांगली कमाई • तुमच्या वेळेनुसार</p>
+      </div>
+      <button class="reg-now-btn" id="t-reg-btn" onclick="showPage('maid',document.querySelectorAll('.nav-item')[3])">नोंदणी करा →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAID REGISTRATION PAGE -->
+<div id="maidPage">
+  <div class="reg-hero">
+    <div style="font-size:2.2rem;margin-bottom:7px">👩‍💼</div>
+    <h2 id="t-regpage-h">Maid म्हणून नोंदणी करा</h2>
+    <p id="t-regpage-p">GWBW सोबत काम करा आणि चांगली कमाई करा!</p>
+  </div>
+  <div style="padding:14px 18px 0;font-size:0.78rem;font-weight:700;color:var(--dark)" id="t-benefits-title">तुम्हाला काय मिळेल? 🎁</div>
+  <div class="benefits-strip">
+    <div class="benefit-card"><div class="b-icon">💰</div><p id="t-b1">चांगली कमाई</p></div>
+    <div class="benefit-card"><div class="b-icon">🕐</div><p id="t-b2">तुमच्या वेळेनुसार</p></div>
+    <div class="benefit-card"><div class="b-icon">🛡️</div><p id="t-b3">सुरक्षित काम</p></div>
+    <div class="benefit-card"><div class="b-icon">⭐</div><p>Rating & Growth</p></div>
+  </div>
+  <div class="reg-form">
+    <div class="reg-section-title" id="t-personal">👤 वैयक्तिक माहिती</div>
+    <div class="form-group"><label id="t-lname">पूर्ण नाव *</label><input type="text" id="t-pname" placeholder="तुमचं पूर्ण नाव टाका"></div>
+    <div class="form-group"><label id="t-lmobile">मोबाईल नंबर *</label><input type="tel" id="t-pmobile" placeholder="10 अंकी नंबर"></div>
+    <div class="form-group"><label id="t-lage">वय</label><input type="number" placeholder="18-60" min="18" max="60"></div>
+    <div class="form-group"><label id="t-laddress">पत्ता *</label><textarea id="t-paddress" placeholder="पूर्ण पत्ता..."></textarea></div>
+
+    <!-- LOCATION IN REG FORM -->
+    <div class="form-group">
+      <label id="t-lloc">📍 तुमचं ठिकाण / Area *</label>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="regLocInput" placeholder="Area, शहर..." style="flex:1">
+        <button onclick="detectRegLocation()" style="background:var(--primary);color:#fff;border:none;border-radius:11px;padding:0 13px;font-size:1rem;cursor:pointer;">📍</button>
+      </div>
+    </div>
+
+    <div class="reg-section-title" id="t-workinfo">🏠 काम माहिती</div>
+    <div class="form-group">
+      <label id="t-lwork">कोणते काम करता? *</label>
+      <div class="checkbox-grid">
+        <label class="checkbox-item" onclick="this.classList.toggle('checked')"><input type="checkbox"> 🧹 <span class="c-clean">साफसफाई</span></label>
+        <label class="checkbox-item" onclick="this.classList.toggle('checked')"><input type="checkbox"> 🍳 <span class="c-cook">स्वयंपाक</span></label>
+        <label class="checkbox-item" onclick="this.classList.toggle('checked')"><input type="checkbox"> 🪣 <span class="c-dishes">भांडी</span></label>
+        <label class="checkbox-item" onclick="this.classList.toggle('checked')"><input type="checkbox"> 👶 <span class="c-baby">बाळ सांभाळ</span></label>
+        <label class="checkbox-item" onclick="this.classList.toggle('checked')"><input type="checkbox"> 👕 <span class="c-laundry">कपडे</span></label>
+        <label class="checkbox-item" onclick="this.classList.toggle('checked')"><input type="checkbox"> 🌿 <span class="c-garden">बागकाम</span></label>
+      </div>
+    </div>
+    <div class="form-group"><label id="t-lexp">अनुभव किती वर्षे?</label>
+      <select><option id="t-exp0">नवीन (0-1 वर्षे)</option><option>1-3</option><option>3-5</option><option>5+</option></select>
+    </div>
+    <div class="form-group"><label id="t-lcharge">प्रति तास charge (₹)</label><input type="number" placeholder="उदा. 150"></div>
+
+    <div class="reg-section-title" id="t-avail-title">⏰ उपलब्धता</div>
+    <div class="form-group">
+      <label id="t-lavail">कोणत्या वेळात काम करता?</label>
+      <div class="time-grid">
+        <div class="time-chip" onclick="this.classList.toggle('selected')">🌅 6–9 AM</div>
+        <div class="time-chip" onclick="this.classList.toggle('selected')">☀️ 9–12 PM</div>
+        <div class="time-chip" onclick="this.classList.toggle('selected')">🕐 12–3 PM</div>
+        <div class="time-chip" onclick="this.classList.toggle('selected')">🌆 3–7 PM</div>
+      </div>
+    </div>
+
+    <div class="reg-section-title">📄 ID Verification</div>
+    <div class="form-group"><label id="t-laadhar">Aadhaar नंबर *</label><input type="text" placeholder="12 digit Aadhaar" maxlength="12"></div>
+    <div class="form-group">
+      <label id="t-lupload">Aadhaar फोटो अपलोड करा *</label>
+      <div class="upload-box"><div class="upload-icon">📷</div><p id="t-upload-p">फोटो इथे टाका</p><span id="t-upload-s">Browse करा</span></div>
+    </div>
+    <button class="submit-reg-btn" id="t-submit" onclick="submitReg()">✅ नोंदणी पूर्ण करा</button>
+  </div>
+</div>
+
+<!-- LOCATION MODAL -->
+<div class="loc-modal-overlay" id="locModalOverlay" onclick="closeLocOnOverlay(event)">
+  <div class="loc-modal">
+    <div class="loc-modal-handle"></div>
+    <button class="loc-close" onclick="closeLocModal()">✕</button>
+    <h3 id="t-loc-modal-title">📍 ठिकाण निवडा</h3>
+    <button class="detect-btn" onclick="detectLocation()">
+      <span>📡</span> <span id="t-detect-btn">माझं ठिकाण शोधा (GPS)</span>
+    </button>
+    <div class="or-divider" id="t-or">किंवा</div>
+    <div class="manual-input">
+      <input type="text" id="manualLocInput" placeholder="Area किंवा शहर टाका..." id="t-manual-ph">
+      <button onclick="setManualLocation()" id="t-set-btn">सेट करा</button>
+    </div>
+    <div class="recent-locations">
+      <div class="recent-title" id="t-recent-title">अलीकडील ठिकाणे</div>
+      <div class="recent-item" onclick="setLocation('पुणे, महाराष्ट्र')"><div class="recent-dot"></div><div><div class="recent-name">पुणे</div><div class="recent-sub">महाराष्ट्र</div></div></div>
+      <div class="recent-item" onclick="setLocation('मुंबई, महाराष्ट्र')"><div class="recent-dot"></div><div><div class="recent-name">मुंबई</div><div class="recent-sub">महाराष्ट्र</div></div></div>
+      <div class="recent-item" onclick="setLocation('नागपूर, महाराष्ट्र')"><div class="recent-dot"></div><div><div class="recent-name">नागपूर</div><div class="recent-sub">महाराष्ट्र</div></div></div>
+      <div class="recent-item" onclick="setLocation('नाशिक, महाराष्ट्र')"><div class="recent-dot"></div><div><div class="recent-name">नाशिक</div><div class="recent-sub">महाराष्ट्र</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <button class="close-modal" onclick="closeModal()">✕</button>
+    <h2 id="modalTitle">बुकिंग करा</h2>
+    <div class="form-group"><label id="t-ml-date">📅 तारीख निवडा</label><input type="date" id="bookDate"></div>
+    <div class="form-group">
+      <label id="t-ml-time">⏰ वेळ निवडा</label>
+      <div class="time-slots">
+        <div class="slot" onclick="selectSlot(this)">7 AM</div>
+        <div class="slot" onclick="selectSlot(this)">9 AM</div>
+        <div class="slot" onclick="selectSlot(this)">11 AM</div>
+        <div class="slot" onclick="selectSlot(this)">2 PM</div>
+        <div class="slot" onclick="selectSlot(this)">5 PM</div>
+      </div>
+    </div>
+    <div class="form-group"><label id="t-ml-work">🏠 काम निवडा</label>
+      <select>
+        <option>🧹 साफसफाई</option><option>🍳 स्वयंपाक</option>
+        <option>🪣 भांडी</option><option>👶 बाळ सांभाळ</option><option>👕 कपडे</option>
+      </select>
+    </div>
+    <div class="form-group"><label id="t-ml-addr">📍 पत्ता</label><input type="text" id="t-ml-addr-input" placeholder="घराचा पत्ता..."></div>
+    <button class="confirm-btn" id="t-confirm" onclick="confirmBooking()">✅ बुकिंग कन्फर्म करा</button>
+  </div>
+</div>
+
+<div class="success-toast" id="toast">🎉 बुकिंग यशस्वी झाली!</div>
+<div class="success-toast" id="regToast">🎉 नोंदणी यशस्वी! लवकरच संपर्क होईल.</div>
+<div class="success-toast" id="locToast">📍 ठिकाण सेट झालं!</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="showPage('home',this)"><span class="nav-icon">🏠</span><span id="tn-home">होम</span></div>
+  <div class="nav-item" onclick="showPage('home',this)"><span class="nav-icon">🔍</span><span id="tn-search">शोधा</span></div>
+  <div class="nav-item" onclick="showPage('home',this)"><span class="nav-icon">📋</span><span id="tn-book">बुकिंग</span></div>
+  <div class="nav-item" onclick="showPage('maid',this)"><span class="nav-icon">👩‍💼</span><span id="tn-reg">नोंदणी</span></div>
+  <div class="nav-item" onclick="showPage('home',this)"><span class="nav-icon">👤</span><span id="tn-profile">प्रोफाईल</span></div>
+</div>
+
+<script>
+  let currentLang = 'mr';
+  document.getElementById('bookDate').valueAsDate = new Date();
+
+  // Auto detect location on load
+  window.addEventListener('load', () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          document.getElementById('currentLocation').textContent = 'तुमचं ठिकाण सापडलं ✓';
+          setTimeout(() => {
+            document.getElementById('currentLocation').textContent = 'पुणे, महाराष्ट्र';
+          }, 1500);
+        },
+        () => {
+          document.getElementById('currentLocation').textContent = 'ठिकाण निवडा';
+        }
+      );
+    } else {
+      document.getElementById('currentLocation').textContent = 'ठिकाण निवडा';
+    }
+  });
+
+  function detectLocation() {
+    document.getElementById('currentLocation').textContent = '📡 शोधत आहे...';
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => { setLocation('तुमचं सध्याचं ठिकाण ✓'); },
+        () => { setLocation('ठिकाण मिळालं नाही'); }
+      );
+    } else {
+      setLocation('GPS उपलब्ध नाही');
+    }
+  }
+
+  function detectRegLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        () => { document.getElementById('regLocInput').value = 'पुणे, महाराष्ट्र'; },
+        () => {}
+      );
+    }
+  }
+
+  function setManualLocation() {
+    const val = document.getElementById('manualLocInput').value.trim();
+    if (val) { setLocation(val); }
+  }
+
+  function setLocation(loc) {
+    document.getElementById('currentLocation').textContent = loc;
+    closeLocModal();
+    showToast('locToast');
+  }
+
+  function openLocModal() { document.getElementById('locModalOverlay').classList.add('open'); }
+  function closeLocModal() { document.getElementById('locModalOverlay').classList.remove('open'); }
+  function closeLocOnOverlay(e) { if (e.target === document.getElementById('locModalOverlay')) closeLocModal(); }
+
+  // LANGUAGE
+  const T = {
+    mr: {
+      'tag':'✨ विश्वासार्ह सेवा','hero-h1':'घरकाम,<br>आमचं काम!','hero-p':'तुमच्या वेळेनुसार maid बुक करा — सोप्या पद्धतीने',
+      'loc-label':'तुमचं ठिकाण','loc-change':'बदला','search-btn':'शोधा','search-ph':'Maid शोधा किंवा काम निवडा...',
+      'promo-h':'पहिली बुकिंग FREE! 🎉','promo-p':'आजच नोंदणी करा आणि सूट मिळवा',
+      'cat-title':'काम निवडा','nearby':'जवळच्या Maids','viewall':'सगळ्या पाहा →','away':'दूर',
+      'c-clean':'साफसफाई','c-cook':'स्वयंपाक','c-baby':'बाळ सांभाळ','c-laundry':'कपडे','c-dishes':'भांडी','c-garden':'बागकाम',
+      'exp5':'5 वर्षे अनुभव','exp8':'8 वर्षे अनुभव','exp3':'3 वर्षे अनुभव','t-hr':'तास','t-avail':'उपलब्ध','t-book':'बुक करा',
+      'reg-label':'तुम्ही maid आहात?','reg-h':'GWBW सोबत काम करा!','reg-p':'चांगली कमाई • तुमच्या वेळेनुसार','reg-btn':'नोंदणी करा →',
+      'regpage-h':'Maid म्हणून नोंदणी करा','regpage-p':'GWBW सोबत काम करा आणि चांगली कमाई करा!','benefits-title':'तुम्हाला काय मिळेल? 🎁',
+      'b1':'चांगली कमाई','b2':'तुमच्या वेळेनुसार','b3':'सुरक्षित काम',
+      'personal':'👤 वैयक्तिक माहिती','lname':'पूर्ण नाव *','pname':'तुमचं पूर्ण नाव टाका',
+      'lmobile':'मोबाईल नंबर *','pmobile':'10 अंकी नंबर','lage':'वय','laddress':'पत्ता *','paddress':'पूर्ण पत्ता...',
+      'lloc':'📍 तुमचं ठिकाण / Area *','workinfo':'🏠 काम माहिती','lwork':'कोणते काम करता? *',
+      'exp0':'नवीन (0-1 वर्षे)','lcharge':'प्रति तास charge (₹)','avail-title':'⏰ उपलब्धता','lavail':'कोणत्या वेळात काम करता?',
+      'laadhar':'Aadhaar नंबर *','lupload':'Aadhaar फोटो अपलोड करा *','upload-p':'फोटो इथे टाका','upload-s':'Browse करा',
+      'submit':'✅ नोंदणी पूर्ण करा','loc-modal-title':'📍 ठिकाण निवडा','detect-btn':'माझं ठिकाण शोधा (GPS)',
+      'or':'किंवा','set-btn':'सेट करा','recent-title':'अलीकडील ठिकाणे',
+      'ml-date':'📅 तारीख निवडा','ml-time':'⏰ वेळ निवडा','ml-work':'🏠 काम निवडा','ml-addr':'📍 पत्ता','ml-addr-input':'घराचा पत्ता...',
+      'confirm':'✅ बुकिंग कन्फर्म करा','tn-home':'होम','tn-search':'शोधा','tn-book':'बुकिंग','tn-reg':'नोंदणी','tn-profile':'प्रोफाईल',
+      'modal-suffix':'– बुकिंग करा','toast':'🎉 बुकिंग यशस्वी झाली!','regtoast':'🎉 नोंदणी यशस्वी! लवकरच संपर्क होईल.','loctoast':'📍 ठिकाण सेट झालं!'
+    },
+    hi: {
+      'tag':'✨ भरोसेमंद सेवा','hero-h1':'घर का काम,<br>हमारा काम!','hero-p':'अपने समय के अनुसार maid बुक करें — आसान तरीके से',
+      'loc-label':'आपका स्थान','loc-change':'बदलें','search-btn':'खोजें','search-ph':'Maid खोजें या काम चुनें...',
+      'promo-h':'पहली बुकिंग FREE! 🎉','promo-p':'आज रजिस्टर करें और छूट पाएं',
+      'cat-title':'काम चुनें','nearby':'पास की Maids','viewall':'सभी देखें →','away':'दूर',
+      'c-clean':'सफाई','c-cook':'खाना बनाना','c-baby':'बच्चा देखभाल','c-laundry':'कपड़े','c-dishes':'बर्तन','c-garden':'बागवानी',
+      'exp5':'5 साल अनुभव','exp8':'8 साल अनुभव','exp3':'3 साल अनुभव','t-hr':'घंटा','t-avail':'उपलब्ध','t-book':'बुक करें',
+      'reg-label':'क्या आप maid हैं?','reg-h':'GWBW के साथ काम करें!','reg-p':'अच्छी कमाई • अपने समय पर','reg-btn':'रजिस्टर करें →',
+      'regpage-h':'Maid के रूप में रजिस्टर करें','regpage-p':'GWBW के साथ काम करें और अच्छी कमाई करें!','benefits-title':'आपको क्या मिलेगा? 🎁',
+      'b1':'अच्छी कमाई','b2':'अपने समय पर','b3':'सुरक्षित काम',
+      'personal':'👤 व्यक्तिगत जानकारी','lname':'पूरा नाम *','pname':'अपना पूरा नाम डालें',
+      'lmobile':'मोबाइल नंबर *','pmobile':'10 अंकी नंबर','lage':'उम्र','laddress':'पता *','paddress':'पूरा पता...',
+      'lloc':'📍 आपका स्थान / Area *','workinfo':'🏠 काम की जानकारी','lwork':'कौन सा काम करती हैं? *',
+      'exp0':'नया (0-1 साल)','lcharge':'प्रति घंटा charge (₹)','avail-title':'⏰ उपलब्धता','lavail':'किस समय काम करती हैं?',
+      'laadhar':'Aadhaar नंबर *','lupload':'Aadhaar फोटो अपलोड करें *','upload-p':'फोटो यहाँ डालें','upload-s':'Browse करें',
+      'submit':'✅ रजिस्ट्रेशन पूरा करें','loc-modal-title':'📍 स्थान चुनें','detect-btn':'मेरा स्थान ढूंढें (GPS)',
+      'or':'या','set-btn':'सेट करें','recent-title':'हाल के स्थान',
+      'ml-date':'📅 तारीख चुनें','ml-time':'⏰ समय चुनें','ml-work':'🏠 काम चुनें','ml-addr':'📍 पता','ml-addr-input':'घर का पता...',
+      'confirm':'✅ बुकिंग कन्फर्म करें','tn-home':'होम','tn-search':'खोजें','tn-book':'बुकिंग','tn-reg':'रजिस्टर','tn-profile':'प्रोफाइल',
+      'modal-suffix':'– बुक करें','toast':'🎉 बुकिंग सफल!','regtoast':'🎉 रजिस्ट्रेशन सफल! जल्द संपर्क होगा.','loctoast':'📍 स्थान सेट हो गया!'
+    },
+    en: {
+      'tag':'✨ Trusted Service','hero-h1':'Home Work,<br>Our Work!','hero-p':'Book a maid as per your schedule — the easy way',
+      'loc-label':'Your Location','loc-change':'Change','search-btn':'Search','search-ph':'Search maid or select work...',
+      'promo-h':'First Booking FREE! 🎉','promo-p':'Register today and get a discount',
+      'cat-title':'Select Work','nearby':'Nearby Maids','viewall':'View All →','away':'away',
+      'c-clean':'Cleaning','c-cook':'Cooking','c-baby':'Babysitting','c-laundry':'Laundry','c-dishes':'Dishes','c-garden':'Gardening',
+      'exp5':'5 yrs exp','exp8':'8 yrs exp','exp3':'3 yrs exp','t-hr':'hr','t-avail':'Available','t-book':'Book',
+      'reg-label':'Are you a maid?','reg-h':'Work with GWBW!','reg-p':'Good income • Flexible hours','reg-btn':'Register →',
+      'regpage-h':'Register as a Maid','regpage-p':'Work with GWBW and earn well!','benefits-title':"What you'll get? 🎁",
+      'b1':'Good Income','b2':'Flexible Hours','b3':'Safe Work',
+      'personal':'👤 Personal Info','lname':'Full Name *','pname':'Enter your full name',
+      'lmobile':'Mobile Number *','pmobile':'10 digit number','lage':'Age','laddress':'Address *','paddress':'Full address...',
+      'lloc':'📍 Your Location / Area *','workinfo':'🏠 Work Info','lwork':'What work do you do? *',
+      'exp0':'New (0-1 yr)','lcharge':'Charge per hour (₹)','avail-title':'⏰ Availability','lavail':'What time can you work?',
+      'laadhar':'Aadhaar Number *','lupload':'Upload Aadhaar Photo *','upload-p':'Upload photo here','upload-s':'Browse Files',
+      'submit':'✅ Complete Registration','loc-modal-title':'📍 Select Location','detect-btn':'Find My Location (GPS)',
+      'or':'or','set-btn':'Set','recent-title':'Recent Locations',
+      'ml-date':'📅 Select Date','ml-time':'⏰ Select Time','ml-work':'🏠 Select Work','ml-addr':'📍 Address','ml-addr-input':'Home address...',
+      'confirm':'✅ Confirm Booking','tn-home':'Home','tn-search':'Search','tn-book':'Bookings','tn-reg':'Register','tn-profile':'Profile',
+      'modal-suffix':'– Book Now','toast':'🎉 Booking Successful!','regtoast':'🎉 Registered! We\'ll contact you soon.','loctoast':'📍 Location set!'
+    }
+  };
+
+  const idMap = {
+    't-tag':'tag','t-hero-h1':'hero-h1','t-hero-p':'hero-p','t-loc-label':'loc-label','t-loc-change':'loc-change',
+    't-search-btn':'search-btn','t-promo-h':'promo-h','t-promo-p':'promo-p','t-cat-title':'cat-title',
+    't-nearby':'nearby','t-viewall':'viewall','t-away':'away',
+    't-reg-label':'reg-label','t-reg-h':'reg-h','t-reg-p':'reg-p','t-reg-btn':'reg-btn',
+    't-regpage-h':'regpage-h','t-regpage-p':'regpage-p','t-benefits-title':'benefits-title',
+    't-b1':'b1','t-b2':'b2','t-b3':'b3','t-personal':'personal','t-lname':'lname','t-lmobile':'lmobile',
+    't-lage':'lage','t-laddress':'laddress','t-workinfo':'workinfo','t-lwork':'lwork',
+    't-exp0':'exp0','t-lcharge':'lcharge','t-avail-title':'avail-title','t-lavail':'lavail',
+    't-lloc':'lloc','t-laadhar':'laadhar','t-lupload':'lupload','t-upload-p':'upload-p','t-upload-s':'upload-s',
+    't-submit':'submit','t-loc-modal-title':'loc-modal-title','t-detect-btn':'detect-btn',
+    't-or':'or','t-set-btn':'set-btn','t-recent-title':'recent-title',
+    't-ml-date':'ml-date','t-ml-time':'ml-time','t-ml-work':'ml-work','t-ml-addr':'ml-addr','t-confirm':'confirm',
+    'tn-home':'tn-home','tn-search':'tn-search','tn-book':'tn-book','tn-reg':'tn-reg','tn-profile':'tn-profile'
+  };
+
+  const clsMap = {
+    'c-clean':'c-clean','c-cook':'c-cook','c-baby':'c-baby','c-laundry':'c-laundry','c-dishes':'c-dishes','c-garden':'c-garden',
+    'exp5':'exp5','exp8':'exp8','exp3':'exp3','t-hr':'t-hr','t-avail':'t-avail','t-book':'t-book',
+    't-away-2':'away','t-away-3':'away'
+  };
+
+  const phMap = {
+    'searchInput':'search-ph','t-pname':'pname','t-pmobile':'pmobile','t-paddress':'paddress','t-ml-addr-input':'ml-addr-input'
+  };
+
+  function setLang(lang, btn) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const t = T[lang];
+    for (const [id,key] of Object.entries(idMap)) {
+      const el = document.getElementById(id);
+      if (el && t[key] !== undefined) el.innerHTML = t[key];
+    }
+    for (const [cls,key] of Object.entries(clsMap)) {
+      document.querySelectorAll('.'+cls).forEach(el => { if (t[key]) el.textContent = t[key]; });
+    }
+    for (const [id,key] of Object.entries(phMap)) {
+      const el = document.getElementById(id);
+      if (el && t[key]) el.placeholder = t[key];
+    }
+    document.getElementById('toast').textContent = t['toast'];
+    document.getElementById('regToast').textContent = t['regtoast'];
+    document.getElementById('locToast').textContent = t['loctoast'];
+  }
+
+  function showPage(page, navEl) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    navEl.classList.add('active');
+    document.getElementById('homePage').style.display = page === 'home' ? 'block' : 'none';
+    document.getElementById('maidPage').style.display = page === 'maid' ? 'block' : 'none';
+    window.scrollTo(0, 0);
+  }
+
+  function selectChip(el) { document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); }
+  function selectSlot(el) { document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected')); el.classList.add('selected'); }
+
+  function openBooking(name) {
+    document.getElementById('modalTitle').textContent = name + ' ' + T[currentLang]['modal-suffix'];
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+
+  function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+  function closeOnOverlay(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+  function confirmBooking() { closeModal(); showToast('toast'); }
+  function submitReg() { showToast('regToast'); window.scrollTo(0, 0); }
+
+  function showToast(id) {
+    const t = document.getElementById(id);
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+</script>
+</body>
+</html>
